@@ -18,8 +18,12 @@
     <meta property="og:url" content="https://romsoft.com.tr/qr/">
     <meta property="og:site_name" content="Romsoft">
     
-    <link rel="stylesheet" href="style2.css">
-    
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style2.css?v=2">
+
     <!-- Load qr-code-styling library -->
     <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 
@@ -49,38 +53,34 @@
 </head>
 
 <body class="qr-body">
-    <!-- Particle Background -->
-    <canvas id="bgCanvas"></canvas>
-
-    <!-- Navigation (Matched to romsoft.com.tr) -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="https://romsoft.com.tr/index" class="nav-logo">romsoft<span class="logo-cursor">_</span></a>
-            <div class="nav-links">
-                <a href="https://romsoft.com.tr/index" data-i18n="nav.home">Anasayfa</a>
-                <a href="https://romsoft.com.tr/about" data-i18n="nav.about">Hakkımızda</a>
-                <a href="https://romsoft.com.tr/projects" data-i18n="nav.projects">Projeler</a>
-                <a href="https://romsoft.com.tr/contact" data-i18n="nav.contact">İletişim</a>
-            </div>
+    <!-- Üst menü (ana sitedekiyle aynı) -->
+    <header class="nav">
+        <div class="wrap">
+            <a class="brand" href="/">romsoft</a>
+            <nav class="nav-links">
+                <a href="/">Ana sayfa</a>
+                <a href="/urunler">Ürünler</a>
+                <a href="/magaza" class="nav-extra">Mağaza</a>
+                <a href="/hakkimizda" class="nav-extra">Hakkımızda</a>
+                <a href="/iletisim">İletişim</a>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
     <main>
         <div class="header-section">
-            <h1>QR KOD TASARIMCI</h1>
-            <p>Gelişmiş özelleştirme paneli ile QR kodunuzu markanızın renklerine büründürün ve logonuzu yerleştirin.</p>
+            <h1>QR kod <em>tasarımcı</em></h1>
+            <p>QR kodunuzu markanızın renklerine göre ayarlayın, ortasına logonuzu koyun; PNG, SVG ya da PDF olarak ücretsiz indirin.</p>
         </div>
 
         <div class="dashboard-container">
             <!-- Sol Kontrol Paneli -->
             <div class="settings-panel">
                 
-                <!-- Şablon Hazır Ayarları (Cyberpunk Temalı Presets) -->
+                <!-- Hazır şablonlar -->
                 <div class="presets-section">
-                    <div class="presets-title">
-                        <span>✨</span> Tasarım Şablonları
-                    </div>
+                    <div class="presets-title">Hazır şablonlar</div>
                     <div class="presets-grid">
                         <button class="preset-btn active" id="preset-nebula" onclick="applyPreset('nebula')">
                             <div class="preset-preview-dot" style="background: linear-gradient(135deg, #6c5ce7 0%, #74b9ff 100%);"></div>
@@ -155,8 +155,8 @@
                             <div class="form-group" id="dot-single-color-group" style="display: none; margin-bottom: 0;">
                                 <label class="form-label">Desen Rengi</label>
                                 <div class="color-picker-container">
-                                    <input type="color" id="dot-color" value="#6c5ce7" oninput="syncColorInput('dot-color', 'dot-color-text')">
-                                    <input type="text" id="dot-color-text" class="color-text-input" value="#6C5CE7" onchange="syncColorPicker('dot-color', 'dot-color-text')">
+                                    <input type="color" id="dot-solid-color" value="#6c5ce7" oninput="syncColorInput('dot-solid-color', 'dot-solid-color-text')">
+                                    <input type="text" id="dot-solid-color-text" class="color-text-input" value="#6C5CE7" onchange="syncColorPicker('dot-solid-color', 'dot-solid-color-text')">
                                 </div>
                             </div>
 
@@ -439,6 +439,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg> PDF Olarak İndir
                         </button>
                     </div>
+                    <p id="indir-durum" class="indir-durum" role="status" hidden></p>
 
                     <button onclick="resetToDefault()" class="reset-btn">Ayarları Sıfırla</button>
                 </div>
@@ -446,44 +447,19 @@
         </div>
     </main>
 
-    <!-- Footer (Matched to romsoft.com.tr) -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-left">
-                    <div class="footer-logo">romsoft</div>
-                    <div class="footer-slogan" data-i18n="footer.slogan">Teknolojiyi sanatla buluşturuyoruz.</div>
-                    <div class="footer-cta" data-i18n="footer.cta">Sorularınız için bize ulaşın.</div>
-                </div>
-                <div class="footer-right">
-                    <a href="https://www.instagram.com/romsoftofficial/" target="_blank" class="social-btn" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                        </svg>
-                    </a>
-                    <a href="mailto:destek@romsoft.com.tr" class="social-btn" aria-label="Email">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                            </path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                    </a>
-                    <a href="https://x.com/romsoftofficial" target="_blank" class="social-btn" aria-label="X (Twitter)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-copyright" data-i18n="footer.rights">© 2025 Romsoft. Tüm hakları saklıdır.</div>
+        <div class="wrap">
+            <span>© 2026 Romsoft</span>
+            <nav class="footer-links">
+                <a href="mailto:destek@romsoft.com.tr">destek@romsoft.com.tr</a>
+                <a href="https://www.instagram.com/romsoftofficial/" target="_blank" rel="noopener">Instagram</a>
+                <a href="https://x.com/romsoftofficial" target="_blank" rel="noopener">X</a>
+                <a href="/gizlilik">Gizlilik</a>
+            </nav>
         </div>
     </footer>
 
-    <!-- Interactive Logic & Background Particles -->
+    <!-- QR tasarımcı mantığı -->
     <script type="text/javascript">
         // Global variables for QR state
         let qrCode = null;
@@ -521,81 +497,19 @@
             });
 
             // Append inside preview container
-            qrCode.append(document.getElementById("qr-canvas-container"));
+            // Kütüphanenin SVG'sinde viewBox yok; dar kartta küçülünce kenarı kesiliyordu.
+            const kap = document.getElementById("qr-canvas-container");
+            new MutationObserver(() => {
+                const svg = kap.querySelector("svg");
+                if (svg && !svg.hasAttribute("viewBox")) {
+                    svg.setAttribute("viewBox", `0 0 ${svg.getAttribute("width")} ${svg.getAttribute("height")}`);
+                }
+            }).observe(kap, { childList: true, subtree: true });
+            qrCode.append(kap);
             
             // Generate initial QR based on controls
             updateQR();
-            initParticles();
         });
-
-        // --- Particle Background Logic ---
-        function initParticles() {
-            const canvas = document.getElementById('bgCanvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                let width, height;
-                let particles = [];
-
-                function resize() {
-                    width = canvas.width = window.innerWidth;
-                    height = canvas.height = window.innerHeight;
-                }
-
-                class Particle {
-                    constructor() {
-                        this.x = Math.random() * width;
-                        this.y = Math.random() * height;
-                        this.vx = (Math.random() - 0.5) * 0.4;
-                        this.vy = (Math.random() - 0.5) * 0.4;
-                        this.size = Math.random() * 2 + 0.5;
-                        this.color = `rgba(108, 92, 231, ${Math.random() * 0.35 + 0.05})`;
-                    }
-
-                    update() {
-                        this.x += this.vx;
-                        this.y += this.vy;
-
-                        if (this.x < 0) this.x = width;
-                        if (this.x > width) this.x = 0;
-                        if (this.y < 0) this.y = height;
-                        if (this.y > height) this.y = 0;
-                    }
-
-                    draw() {
-                        ctx.beginPath();
-                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                        ctx.fillStyle = this.color;
-                        ctx.fill();
-                    }
-                }
-
-                function makeParticles() {
-                    particles = [];
-                    const count = Math.min(Math.floor(width / 20), 80);
-                    for (let i = 0; i < count; i++) {
-                        particles.push(new Particle());
-                    }
-                }
-
-                function animate() {
-                    ctx.clearRect(0, 0, width, height);
-                    particles.forEach(p => {
-                        p.update();
-                        p.draw();
-                    });
-                    requestAnimationFrame(animate);
-                }
-
-                window.addEventListener('resize', () => {
-                    resize();
-                    makeParticles();
-                });
-
-                resize();
-                makeParticles();
-                animate();
-            }
-        }
 
         // --- QR Customizer Handlers ---
 
@@ -713,7 +627,7 @@
             let dotOptions = { type: dotType };
 
             if (dotColorType === 'single') {
-                dotOptions.color = document.getElementById('dot-color').value;
+                dotOptions.color = document.getElementById('dot-solid-color').value;
                 dotOptions.gradient = null;
             } else {
                 const color1 = document.getElementById('dot-grad-color1').value;
@@ -764,7 +678,7 @@
                 // fallback to same as dots (or clean default)
                 cornersSquareOptions = {
                     type: dotType === 'dots' || dotType === 'rounded' || dotType === 'classy-rounded' ? 'extra-rounded' : 'square',
-                    color: dotColorType === 'single' ? document.getElementById('dot-color').value : document.getElementById('dot-grad-color1').value,
+                    color: dotColorType === 'single' ? document.getElementById('dot-solid-color').value : document.getElementById('dot-grad-color1').value,
                     gradient: null
                 };
             }
@@ -800,7 +714,7 @@
             } else {
                 cornersDotOptions = {
                     type: dotType === 'dots' || dotType === 'rounded' || dotType === 'classy-rounded' ? 'dot' : 'square',
-                    color: dotColorType === 'single' ? document.getElementById('dot-color').value : document.getElementById('dot-grad-color1').value,
+                    color: dotColorType === 'single' ? document.getElementById('dot-solid-color').value : document.getElementById('dot-grad-color1').value,
                     gradient: null
                 };
             }
@@ -902,8 +816,8 @@
                 // Dots
                 document.getElementById('dot-type-select').value = 'classy-rounded';
                 document.getElementById('dot-color-type').value = 'single';
-                document.getElementById('dot-color').value = '#D4AF37';
-                document.getElementById('dot-color-text').value = '#D4AF37';
+                document.getElementById('dot-solid-color').value = '#D4AF37';
+                document.getElementById('dot-solid-color-text').value = '#D4AF37';
 
                 // Custom Corners Square
                 document.getElementById('custom-corners-square-toggle').checked = true;
@@ -929,8 +843,8 @@
                 // Dots
                 document.getElementById('dot-type-select').value = 'dots';
                 document.getElementById('dot-color-type').value = 'single';
-                document.getElementById('dot-color').value = '#00CEC9';
-                document.getElementById('dot-color-text').value = '#00CEC9';
+                document.getElementById('dot-solid-color').value = '#00CEC9';
+                document.getElementById('dot-solid-color-text').value = '#00CEC9';
 
                 // Custom Corners Square
                 document.getElementById('custom-corners-square-toggle').checked = true;
@@ -956,8 +870,8 @@
                 // Dots
                 document.getElementById('dot-type-select').value = 'square';
                 document.getElementById('dot-color-type').value = 'single';
-                document.getElementById('dot-color').value = '#FFFFFF';
-                document.getElementById('dot-color-text').value = '#FFFFFF';
+                document.getElementById('dot-solid-color').value = '#FFFFFF';
+                document.getElementById('dot-solid-color-text').value = '#FFFFFF';
 
                 // Background
                 document.getElementById('bg-color').value = '#000000';
@@ -992,10 +906,55 @@
             });
 
             const fileName = `qrcode-${Date.now()}`;
+            if (format === 'pdf') {
+                // Kütüphane PDF üretmiyor (PNG verisini .pdf adıyla indiriyordu); PNG'yi jsPDF ile sayfaya koy.
+                pdfIndir(downloadQrCode, fileName);
+                return;
+            }
             downloadQrCode.download({
                 name: fileName,
                 extension: format
             });
+        }
+
+        let jsPdfYukleniyor = null;
+        function jsPdfYukle() {
+            if (window.jspdf) return Promise.resolve();
+            if (!jsPdfYukleniyor) {
+                jsPdfYukleniyor = new Promise((tamam, hata) => {
+                    const s = document.createElement('script');
+                    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                    s.onload = tamam;
+                    s.onerror = () => { jsPdfYukleniyor = null; hata(new Error('jsPDF yüklenemedi')); };
+                    document.head.appendChild(s);
+                });
+            }
+            return jsPdfYukleniyor;
+        }
+
+        async function pdfIndir(kod, fileName) {
+            const btn = document.getElementById('download-pdf-btn');
+            const durum = document.getElementById('indir-durum');
+            btn.disabled = true;
+            durum.hidden = true;
+            try {
+                const [blob] = await Promise.all([kod.getRawData('png'), jsPdfYukle()]);
+                const dataUrl = await new Promise((tamam, hata) => {
+                    const r = new FileReader();
+                    r.onload = () => tamam(r.result);
+                    r.onerror = hata;
+                    r.readAsDataURL(blob);
+                });
+                // Kare sayfa: 100 mm QR + 10 mm kenar boşluğu
+                const doc = new window.jspdf.jsPDF({ unit: 'mm', format: [120, 120] });
+                doc.addImage(dataUrl, 'PNG', 10, 10, 100, 100, undefined, 'FAST');
+                doc.save(`${fileName}.pdf`);
+            } catch (e) {
+                durum.textContent = 'PDF oluşturulamadı; bağlantınızı kontrol edip tekrar deneyin ya da PNG/SVG indirin.';
+                durum.hidden = false;
+            } finally {
+                btn.disabled = false;
+            }
         }
 
         // Reset to Default Setup
