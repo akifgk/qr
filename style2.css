@@ -152,11 +152,20 @@ button {
     .brand {
         font-size: 34px;
     }
+    .nav .wrap {
+        gap: 10px;
+    }
+    .brand {
+        padding: 8px 2px 0;
+    }
     .nav-links {
-        gap: 16px;
+        gap: 12px;
     }
     .nav-links a {
-        font-size: 14px;
+        font-size: 13px;
+    }
+    .lang button {
+        padding: 6px 8px;
     }
     .nav-links a.nav-extra {
         display: none;
@@ -752,4 +761,131 @@ input:focus-visible + .slider {
     * {
         transition: none !important;
     }
+}
+
+/* ---- v3 eklemeleri ---- */
+[hidden] {
+    display: none !important;
+}
+
+.lang {
+    display: flex;
+    border: 1px solid var(--line);
+    flex: none;
+}
+
+.lang button {
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-3);
+    transition: background 0.25s, color 0.25s;
+}
+
+.lang button.on {
+    background: var(--ink);
+    color: var(--bg);
+}
+
+.acc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tur-alanlar,
+.grup-govde {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+textarea.form-input {
+    resize: vertical;
+    min-height: 64px;
+}
+
+.ipucu {
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.5;
+}
+
+.logo-ad {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 85%;
+}
+
+.color-picker-container.pasif {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.onizleme {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    width: 100%;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+}
+
+.onizleme svg {
+    max-width: 100%;
+}
+
+.onizleme-bos {
+    padding: 36px 20px;
+    font-size: 14px;
+    color: var(--ink-3);
+    text-align: center;
+}
+
+.tarama {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--line);
+    text-align: left;
+}
+
+.tarama.ok {
+    border-color: #1f7a3d;
+    color: #1f7a3d;
+}
+
+.tarama.kotu {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.tarama.bekle {
+    color: var(--ink-3);
+}
+
+.uyari {
+    width: 100%;
+    list-style: none;
+    margin-bottom: 14px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--ink-2);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.uyari li {
+    padding-left: 12px;
+    border-left: 2px solid var(--red);
+}
+
+.preview-card h2.preview-title {
+    font-family: inherit;
 }
