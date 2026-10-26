@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Kod Oluşturucu - romsoft.</title>
+    <link rel="stylesheet" href="style2.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .qr-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            max-width: 400px;
+            width: 90%;
+            border-top: 5px solid var(--primary);
+        }
+
+        #qr-image {
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="qr-card">
+        <h2 style="color: var(--primary); font-family: var(--font-heading); margin-bottom: 1rem;">QR Kod Oluşturucu</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+            Siteniz internete yüklendiğinde oluşacak adresi aşağıya yazın.
+        </p>
+
+        <div class="form-group">
+            <label class="form-label" style="text-align: left;">Site Adresi (URL)</label>
+            <input type="text" id="url-input" class="form-input" placeholder="https://...">
+        </div>
+
+        <button onclick="generateQR()" class="btn btn-primary" style="width: 100%;">Kodu Oluştur</button>
+
+        <img id="qr-image" src="" alt="QR Kod" style="display: none; width: 200px; height: 200px;">
+
+        <div id="download-area" style="display: none; margin-top: 1rem;">
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Sağ tıklayıp "Resmi Farklı Kaydet" diyebilirsiniz.
+            </p>
+            <a href="https://romsoft.com.tr" class="btn btn-sm"
+                style="margin-top: 1rem; color: var(--text-muted); background: #f0f0f0;">← Siteye Dön</a>
+        </div>
+    </div>
+
+    <script>
+        function generateQR() {
+            const url = document.getElementById('url-input').value;
+            if (!url) return;
+
+            const qrImg = document.getElementById('qr-image');
+            const downloadArea = document.getElementById('download-area');
+
+            // Using a public secure QR code API
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
+            qrImg.style.display = 'inline-block';
+            downloadArea.style.display = 'block';
+        }
+
+    </script>
+    <footer>
+        <center>
+            <p style="font-size: 0.8rem; font-weight: 300; opacity: 0.7; margin-top: 5px;">design by romsoft</p>
+        </center>
+
+    </footer>
+</body>
+
+</html>
