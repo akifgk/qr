@@ -1,5 +1,5 @@
 /* Romsoft QR kod tasarımcı — arayüz ve üretim mantığı.
-   Kütüphaneler vendor/ altında (qr-code-styling, jsQR, jsPDF); dışarıdan yüklenen bir şey yok. */
+   Kütüphaneler vendor/ altında (qr-code-styling, jsPDF); dışarıdan yüklenen bir şey yok. */
 (function () {
     'use strict';
 
@@ -36,10 +36,7 @@
         'empty': 'Kodu oluşturmak için içerik alanlarını doldurun.',
         'toolong': 'İçerik bu kod için çok uzun; kısaltın.',
         'lib': 'QR kütüphanesi yüklenemedi; sayfayı yenileyin.',
-        'scan.wait': 'Okuma denemesi yapılıyor…',
-        'scan.ok': '✓ Kod bu tasarımla okunuyor',
-        'scan.bad': '✗ Kod okunamadı; renkleri, logo boyutunu veya boşluğu değiştirin',
-        'scan.diff': '✗ Kod okundu ama içerik farklı çıktı; tasarımı sadeleştirin',
+        'verify': 'Kodu kullanmadan veya basmadan önce telefonunuzla okutarak kontrol edin.',
         'uy.low': 'Desen ile zemin arasındaki kontrast düşük; bazı telefonlar bu kodu okuyamayabilir.',
         'uy.inv': 'Açık desen koyu zeminde: bazı eski tarayıcılar bunu okuyamaz; basmadan önce telefonla deneyin.',
         'uy.gap': 'Kenar boşluğu yok: kodu basarken çevresinde boş bir alan bırakın.',
@@ -88,10 +85,7 @@
         'empty': 'Fill in the content fields to create the code.',
         'toolong': 'The content is too long for a QR code; shorten it.',
         'lib': 'The QR library could not be loaded; reload the page.',
-        'scan.wait': 'Testing whether it scans…',
-        'scan.ok': '✓ The code scans with this design',
-        'scan.bad': '✗ The code could not be read; change the colors, logo size or margin',
-        'scan.diff': '✗ The code was read but the content differs; simplify the design',
+        'verify': 'Scan the code with your phone to check it before you use or print it.',
         'uy.low': 'Contrast between the pattern and the background is low; some phones may not read this code.',
         'uy.inv': 'Light pattern on a dark background: some older scanners cannot read this; test with a phone before printing.',
         'uy.gap': 'No margin: leave an empty area around the code when you print it.',
@@ -462,11 +456,10 @@
     }
 
     /* ---------- Önizleme, uyarılar, okuma denemesi ---------- */
-    let sira = 0, taramaZamani = 0, ciz_zamani = 0;
+    let sira = 0, ciz_zamani = 0;
 
     function bosGoster(metin) {
         $('onizleme').innerHTML = `<p class="onizleme-bos">${metin}</p>`;
-        $('tarama').hidden = true;
         $('uyari').hidden = true;
         for (const id of ['indir-png', 'indir-svg', 'indir-pdf']) $(id).disabled = true;
     }
@@ -494,34 +487,6 @@
         ul.hidden = !liste.length;
     }
 
-    function taramaYaz(durum) {
-        const p = $('tarama');
-        if (!durum) { p.hidden = true; return; }
-        p.hidden = false;
-        p.className = 'tarama ' + (durum === 'scan.ok' ? 'ok' : durum === 'scan.wait' ? 'bekle' : 'kotu');
-        p.textContent = t(durum);
-    }
-
-    async function tara(veri, benim) {
-        try {
-            const kod = new QRCodeStyling({ ...kodSecenek(veri), width: 480, height: 480, type: 'canvas' });
-            const bmp = await createImageBitmap(await kod.getRawData('png'));
-            const pad = 60;
-            const cv = document.createElement('canvas');
-            cv.width = cv.height = 480 + 2 * pad;
-            const x = cv.getContext('2d', { willReadFrequently: true });
-            x.fillStyle = $('bg-seffaf').checked ? '#ffffff' : $('bg-color').value;
-            x.fillRect(0, 0, cv.width, cv.height);
-            x.drawImage(bmp, pad, pad);
-            const d = x.getImageData(0, 0, cv.width, cv.height);
-            const r = jsQR(d.data, d.width, d.height, { inversionAttempts: 'attemptBoth' });
-            if (benim !== sira) return;
-            taramaYaz(!r ? 'scan.bad' : (r.data === veri ? 'scan.ok' : 'scan.diff'));
-        } catch {
-            if (benim === sira) taramaYaz(null);
-        }
-    }
-
     async function ciz() {
         const benim = ++sira;
         if (typeof QRCodeStyling === 'undefined') { bosGoster(t('lib')); return; }
@@ -539,9 +504,6 @@
             $('onizleme').replaceChildren(c.el);
             for (const id of ['indir-png', 'indir-svg', 'indir-pdf']) $(id).disabled = false;
             uyarilar();
-            taramaYaz('scan.wait');
-            clearTimeout(taramaZamani);
-            taramaZamani = setTimeout(() => tara(veri, benim), 350);
         } catch {
             if (benim === sira) bosGoster(t('toolong'));
         }
