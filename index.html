@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ücretsiz QR Kod Tasarımcı - Romsoft</title>
+    <meta name="description"
+        content="Romsoft QR Kod Tasarımcı ile renkli, gradyanlı ve logolu QR kodlarınızı ücretsiz ve vektörel (SVG, PNG, PDF) olarak tasarlayın.">
+    <meta name="keywords" content="qr kod, qr kod oluşturucu, logolu qr kod, renkli qr, ücretsiz qr oluşturma, romsoft qr">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://romsoft.com.tr/qr/" />
+    
+    <!-- Open Graph for AI / Social Media -->
+    <meta property="og:title" content="Ücretsiz QR Kod Tasarımcı - Romsoft">
+    <meta property="og:description" content="Kendi logonuzu ekleyip desen ve renklerini özelleştirebileceğiniz gelişmiş QR kod tasarım aracı.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://romsoft.com.tr/qr/">
+    <meta property="og:site_name" content="Romsoft">
+    
+    <link rel="stylesheet" href="style2.css">
+    
+    <!-- Load qr-code-styling library -->
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+
+    <!-- Schema.org JSON-LD Structured Data for Google/AI -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Romsoft QR Kod Tasarımcı",
+      "url": "https://romsoft.com.tr/qr/",
+      "description": "Logolu ve renkli qr kodlarınızı ücretsiz ve dinamik olarak tasarlayıp yüksek çözünürlükte indirin.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires HTML5 Canvas support",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "TRY"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Romsoft",
+        "url": "https://romsoft.com.tr"
+      }
+    }
+    </script>
+</head>
+
+<body class="qr-body">
+    <!-- Particle Background -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Navigation (Matched to romsoft.com.tr) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="https://romsoft.com.tr/index" class="nav-logo">romsoft<span class="logo-cursor">_</span></a>
+            <div class="nav-links">
+                <a href="https://romsoft.com.tr/index" data-i18n="nav.home">Anasayfa</a>
+                <a href="https://romsoft.com.tr/about" data-i18n="nav.about">Hakkımızda</a>
+                <a href="https://romsoft.com.tr/projects" data-i18n="nav.projects">Projeler</a>
+                <a href="https://romsoft.com.tr/contact" data-i18n="nav.contact">İletişim</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="header-section">
+            <h1>QR KOD TASARIMCI</h1>
+            <p>Gelişmiş özelleştirme paneli ile QR kodunuzu markanızın renklerine büründürün ve logonuzu yerleştirin.</p>
+        </div>
+
+        <div class="dashboard-container">
+            <!-- Sol Kontrol Paneli -->
+            <div class="settings-panel">
+                
+                <!-- Şablon Hazır Ayarları (Cyberpunk Temalı Presets) -->
+                <div class="presets-section">
+                    <div class="presets-title">
+                        <span>✨</span> Tasarım Şablonları
+                    </div>
+                    <div class="presets-grid">
+                        <button class="preset-btn active" id="preset-nebula" onclick="applyPreset('nebula')">
+                            <div class="preset-preview-dot" style="background: linear-gradient(135deg, #6c5ce7 0%, #74b9ff 100%);"></div>
+                            <span class="preset-name">Romsoft Nebula</span>
+                        </button>
+                        <button class="preset-btn" id="preset-neon" onclick="applyPreset('neon')">
+                            <div class="preset-preview-dot" style="background: linear-gradient(135deg, #ff007f 0%, #00f0ff 100%);"></div>
+                            <span class="preset-name">Neon Pulse</span>
+                        </button>
+                        <button class="preset-btn" id="preset-gold" onclick="applyPreset('gold')">
+                            <div class="preset-preview-dot" style="background: linear-gradient(135deg, #fbbf24 0%, #d4af37 100%);"></div>
+                            <span class="preset-name">Quantum Gold</span>
+                        </button>
+                        <button class="preset-btn" id="preset-emerald" onclick="applyPreset('emerald')">
+                            <div class="preset-preview-dot" style="background: linear-gradient(135deg, #00cec9 0%, #81ecec 100%);"></div>
+                            <span class="preset-name">Emerald Grid</span>
+                        </button>
+                        <button class="preset-btn" id="preset-dark" onclick="applyPreset('dark')">
+                            <div class="preset-preview-dot" style="background: #ffffff;"></div>
+                            <span class="preset-name">Classic Dark</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Akordeon Form Kontrolleri -->
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    
+                    <!-- 1. İçerik ve Boyut -->
+                    <details open id="details-content">
+                        <summary>1. QR Kod İçeriği & Çözünürlük</summary>
+                        <div class="details-content">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="url-input">Web Sitesi Adresi (URL) veya Metin</label>
+                                <input type="text" id="url-input" class="form-input" placeholder="https://romsoft.com.tr" value="https://romsoft.com.tr" oninput="updateQR()">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="qr-size-select">İndirme Çözünürlüğü (Piksel)</label>
+                                <select id="qr-size-select" class="select-input" onchange="updateQRSize()">
+                                    <option value="300">300 x 300 px (Hızlı)</option>
+                                    <option value="500" selected>500 x 500 px (Önerilen)</option>
+                                    <option value="1000">1000 x 1000 px (Yüksek Çözünürlük)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- 2. Desen Stili -->
+                    <details id="details-pattern">
+                        <summary>2. QR Desen Ayarları (Dots)</summary>
+                        <div class="details-content">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="dot-type-select">Desen Şekli</label>
+                                <select id="dot-type-select" class="select-input" onchange="updateQR()">
+                                    <option value="rounded" selected>Yuvarlatılmış (Rounded)</option>
+                                    <option value="dots">Dairesel Noktalar (Dots)</option>
+                                    <option value="classy">Klasik Kıvrımlı (Classy)</option>
+                                    <option value="classy-rounded">Kıvrımlı Yumuşak (Classy Rounded)</option>
+                                    <option value="square">Köşeli Kare (Square)</option>
+                                    <option value="extra-rounded">Ekstra Oval (Extra Rounded)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="dot-color-type">Desen Renk Tipi</label>
+                                <select id="dot-color-type" class="select-input" onchange="toggleGradient('dot')">
+                                    <option value="gradient" selected>Gradyan Geçişli</option>
+                                    <option value="single">Tek Renk</option>
+                                </select>
+                            </div>
+
+                            <!-- Tek Renk Seçimi -->
+                            <div class="form-group" id="dot-single-color-group" style="display: none; margin-bottom: 0;">
+                                <label class="form-label">Desen Rengi</label>
+                                <div class="color-picker-container">
+                                    <input type="color" id="dot-color" value="#6c5ce7" oninput="syncColorInput('dot-color', 'dot-color-text')">
+                                    <input type="text" id="dot-color-text" class="color-text-input" value="#6C5CE7" onchange="syncColorPicker('dot-color', 'dot-color-text')">
+                                </div>
+                            </div>
+
+                            <!-- Gradyan Seçimi -->
+                            <div class="form-row" id="dot-gradient-colors-group">
+                                <div class="color-group">
+                                    <label class="form-label">Başlangıç Rengi</label>
+                                    <div class="color-picker-container">
+                                        <input type="color" id="dot-grad-color1" value="#6c5ce7" oninput="syncColorInput('dot-grad-color1', 'dot-grad-color1-text')">
+                                        <input type="text" id="dot-grad-color1-text" class="color-text-input" value="#6C5CE7" onchange="syncColorPicker('dot-grad-color1', 'dot-grad-color1-text')">
+                                    </div>
+                                </div>
+                                <div class="color-group">
+                                    <label class="form-label">Bitiş Rengi</label>
+                                    <div class="color-picker-container">
+                                        <input type="color" id="dot-grad-color2" value="#74b9ff" oninput="syncColorInput('dot-grad-color2', 'dot-grad-color2-text')">
+                                        <input type="text" id="dot-grad-color2-text" class="color-text-input" value="#74B9FF" onchange="syncColorPicker('dot-grad-color2', 'dot-grad-color2-text')">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row" id="dot-gradient-options-group">
+                                <div class="color-group">
+                                    <label class="form-label" for="dot-grad-type">Gradyan Yönü</label>
+                                    <select id="dot-grad-type" class="select-input" onchange="updateQR()">
+                                        <option value="linear" selected>Doğrusal (Linear)</option>
+                                        <option value="radial">Dairesel (Radial)</option>
+                                    </select>
+                                </div>
+                                <div class="range-wrapper">
+                                    <div class="range-header">
+                                        <span>Gradyan Açısı</span>
+                                        <span class="range-value" id="dot-grad-angle-val">45°</span>
+                                    </div>
+                                    <input type="range" id="dot-grad-angle" class="range-input" min="0" max="360" value="45" oninput="updateRangeValue('dot-grad-angle', 'dot-grad-angle-val'); updateQR();">
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- 3. Köşe Kareleri (Dış Çerçeve) -->
+                    <details id="details-corners-square">
+                        <summary>3. Köşe Çerçevesi Ayarları (Corners Square)</summary>
+                        <div class="details-content">
+                            <div class="toggle-container">
+                                <span style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">Özel Köşe Çerçeve Tasarımı</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="custom-corners-square-toggle" onchange="toggleCustomSection('corners-square'); updateQR();">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div id="corners-square-options-panel" style="display: none; flex-direction: column; gap: 1.25rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="corners-square-type-select">Köşe Çerçeve Şekli</label>
+                                    <select id="corners-square-type-select" class="select-input" onchange="updateQR()">
+                                        <option value="extra-rounded" selected>Oval Kenar (Extra Rounded)</option>
+                                        <option value="square">Köşeli Kare (Square)</option>
+                                        <option value="dot">Dairesel (Dot)</option>
+                                        <option value="outy-inny">İçe-Dışa Eğri (Outy Inny)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="corners-square-color-type">Çerçeve Renk Tipi</label>
+                                    <select id="corners-square-color-type" class="select-input" onchange="toggleGradient('corners-square')">
+                                        <option value="single" selected>Tek Renk</option>
+                                        <option value="gradient">Gradyan Geçişli</option>
+                                    </select>
+                                </div>
+
+                                <!-- Tek Renk -->
+                                <div class="form-group" id="corners-square-single-color-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Çerçeve Rengi</label>
+                                    <div class="color-picker-container">
+                                        <input type="color" id="corners-square-color" value="#6c5ce7" oninput="syncColorInput('corners-square-color', 'corners-square-color-text')">
+                                        <input type="text" id="corners-square-color-text" class="color-text-input" value="#6C5CE7" onchange="syncColorPicker('corners-square-color', 'corners-square-color-text')">
+                                    </div>
+                                </div>
+
+                                <!-- Gradyan -->
+                                <div class="form-row" id="corners-square-gradient-colors-group" style="display: none;">
+                                    <div class="color-group">
+                                        <label class="form-label">Başlangıç Rengi</label>
+                                        <div class="color-picker-container">
+                                            <input type="color" id="corners-square-grad-color1" value="#6c5ce7" oninput="syncColorInput('corners-square-grad-color1', 'corners-square-grad-color1-text')">
+                                            <input type="text" id="corners-square-grad-color1-text" class="color-text-input" value="#6C5CE7" onchange="syncColorPicker('corners-square-grad-color1', 'corners-square-grad-color1-text')">
+                                        </div>
+                                    </div>
+                                    <div class="color-group">
+                                        <label class="form-label">Bitiş Rengi</label>
+                                        <div class="color-picker-container">
+                                            <input type="color" id="corners-square-grad-color2" value="#74b9ff" oninput="syncColorInput('corners-square-grad-color2', 'corners-square-grad-color2-text')">
+                                            <input type="text" id="corners-square-grad-color2-text" class="color-text-input" value="#74B9FF" onchange="syncColorPicker('corners-square-grad-color2', 'corners-square-grad-color2-text')">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row" id="corners-square-gradient-options-group" style="display: none;">
+                                    <div class="color-group">
+                                        <label class="form-label" for="corners-square-grad-type">Gradyan Yönü</label>
+                                        <select id="corners-square-grad-type" class="select-input" onchange="updateQR()">
+                                            <option value="linear" selected>Doğrusal (Linear)</option>
+                                            <option value="radial">Dairesel (Radial)</option>
+                                        </select>
+                                    </div>
+                                    <div class="range-wrapper">
+                                        <div class="range-header">
+                                            <span>Gradyan Açısı</span>
+                                            <span class="range-value" id="corners-square-grad-angle-val">45°</span>
+                                        </div>
+                                        <input type="range" id="corners-square-grad-angle" class="range-input" min="0" max="360" value="45" oninput="updateRangeValue('corners-square-grad-angle', 'corners-square-grad-angle-val'); updateQR();">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- 4. Köşe Noktaları (İç Nokta) -->
+                    <details id="details-corners-dot">
+                        <summary>4. Köşe Noktası Ayarları (Corners Dot)</summary>
+                        <div class="details-content">
+                            <div class="toggle-container">
+                                <span style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">Özel Köşe Nokta Tasarımı</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="custom-corners-dot-toggle" onchange="toggleCustomSection('corners-dot'); updateQR();">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div id="corners-dot-options-panel" style="display: none; flex-direction: column; gap: 1.25rem;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="corners-dot-type-select">Köşe Nokta Şekli</label>
+                                    <select id="corners-dot-type-select" class="select-input" onchange="updateQR()">
+                                        <option value="dot" selected>Dairesel (Dot)</option>
+                                        <option value="square">Kare (Square)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label" for="corners-dot-color-type">Nokta Renk Tipi</label>
+                                    <select id="corners-dot-color-type" class="select-input" onchange="toggleGradient('corners-dot')">
+                                        <option value="single" selected>Tek Renk</option>
+                                        <option value="gradient">Gradyan Geçişli</option>
+                                    </select>
+                                </div>
+
+                                <!-- Tek Renk -->
+                                <div class="form-group" id="corners-dot-single-color-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Nokta Rengi</label>
+                                    <div class="color-picker-container">
+                                        <input type="color" id="corners-dot-color" value="#74b9ff" oninput="syncColorInput('corners-dot-color', 'corners-dot-color-text')">
+                                        <input type="text" id="corners-dot-color-text" class="color-text-input" value="#74B9FF" onchange="syncColorPicker('corners-dot-color', 'corners-dot-color-text')">
+                                    </div>
+                                </div>
+
+                                <!-- Gradyan -->
+                                <div class="form-row" id="corners-dot-gradient-colors-group" style="display: none;">
+                                    <div class="color-group">
+                                        <label class="form-label">Başlangıç Rengi</label>
+                                        <div class="color-picker-container">
+                                            <input type="color" id="corners-dot-grad-color1" value="#6c5ce7" oninput="syncColorInput('corners-dot-grad-color1', 'corners-dot-grad-color1-text')">
+                                            <input type="text" id="corners-dot-grad-color1-text" class="color-text-input" value="#6C5CE7" onchange="syncColorPicker('corners-dot-grad-color1', 'corners-dot-grad-color1-text')">
+                                        </div>
+                                    </div>
+                                    <div class="color-group">
+                                        <label class="form-label">Bitiş Rengi</label>
+                                        <div class="color-picker-container">
+                                            <input type="color" id="corners-dot-grad-color2" value="#74b9ff" oninput="syncColorInput('corners-dot-grad-color2', 'corners-dot-grad-color2-text')">
+                                            <input type="text" id="corners-dot-grad-color2-text" class="color-text-input" value="#74B9FF" onchange="syncColorPicker('corners-dot-grad-color2', 'corners-dot-grad-color2-text')">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row" id="corners-dot-gradient-options-group" style="display: none;">
+                                    <div class="color-group">
+                                        <label class="form-label" for="corners-dot-grad-type">Gradyan Yönü</label>
+                                        <select id="corners-dot-grad-type" class="select-input" onchange="updateQR()">
+                                            <option value="linear" selected>Doğrusal (Linear)</option>
+                                            <option value="radial">Dairesel (Radial)</option>
+                                        </select>
+                                    </div>
+                                    <div class="range-wrapper">
+                                        <div class="range-header">
+                                            <span>Gradyan Açısı</span>
+                                            <span class="range-value" id="corners-dot-grad-angle-val">45°</span>
+                                        </div>
+                                        <input type="range" id="corners-dot-grad-angle" class="range-input" min="0" max="360" value="45" oninput="updateRangeValue('corners-dot-grad-angle', 'corners-dot-grad-angle-val'); updateQR();">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- 5. Arka Plan -->
+                    <details id="details-background">
+                        <summary>5. Arka Plan Ayarları</summary>
+                        <div class="details-content">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label">Arka Plan Rengi</label>
+                                <div class="color-picker-container">
+                                    <input type="color" id="bg-color" value="#ffffff" oninput="syncColorInput('bg-color', 'bg-color-text')">
+                                    <input type="text" id="bg-color-text" class="color-text-input" value="#FFFFFF" onchange="syncColorPicker('bg-color', 'bg-color-text')">
+                                </div>
+                            </div>
+                            
+                            <div class="toggle-container">
+                                <span style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">Şeffaf Arka Plan (Transparent)</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="bg-transparent-toggle" onchange="toggleTransparentBackground();">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- 6. Logo Ekleme -->
+                    <details id="details-logo">
+                        <summary>6. Logo Entegrasyonu (Center Logo)</summary>
+                        <div class="details-content">
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="logo-file-input" accept="image/*" onchange="handleLogoUpload(event)">
+                                <div class="upload-info">
+                                    <span class="upload-title">Özel Logo Yükleyin</span>
+                                    <span class="upload-desc">PNG, JPG veya SVG (Kare form önerilir)</span>
+                                </div>
+                            </div>
+
+                            <div class="file-name-display" id="logo-file-display">
+                                <span id="logo-file-name" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 80%;">logo.png</span>
+                                <button type="button" class="remove-file-btn" onclick="removeLogo()">×</button>
+                            </div>
+
+                            <div class="range-wrapper">
+                                <div class="range-header">
+                                    <span>Logo Boyutu Oranı</span>
+                                    <span class="range-value" id="logo-size-val">0.30</span>
+                                </div>
+                                <input type="range" id="logo-size" class="range-input" min="0.10" max="0.50" step="0.05" value="0.30" oninput="updateRangeValue('logo-size', 'logo-size-val'); updateQR();">
+                            </div>
+
+                            <div class="range-wrapper">
+                                <div class="range-header">
+                                    <span>Logo Kenar Boşluğu (Margin)</span>
+                                    <span class="range-value" id="logo-margin-val">0 px</span>
+                                </div>
+                                <input type="range" id="logo-margin" class="range-input" min="0" max="20" step="1" value="0" oninput="updateRangeValue('logo-margin', 'logo-margin-val', ' px'); updateQR();">
+                            </div>
+
+                            <div class="toggle-container">
+                                <span style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">Logonun Arkasındaki Deseni Gizle</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="logo-clear-bg" checked onchange="updateQR()">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </details>
+
+                </div>
+            </div>
+
+            <!-- Sağ Önizleme & İndirme Paneli (Sticky) -->
+            <div class="preview-card-wrapper">
+                <div class="preview-card">
+                    <h3 class="preview-title">Canlı Önizleme</h3>
+                    
+                    <div id="qr-canvas-container">
+                        <!-- QR Code styling library will render here -->
+                    </div>
+
+                    <div class="download-btn-group">
+                        <button onclick="downloadQR('png')" class="download-btn download-btn-primary" id="download-png-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> PNG Olarak İndir
+                        </button>
+                        <button onclick="downloadQR('svg')" class="download-btn download-btn-secondary" id="download-svg-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg> SVG Olarak İndir
+                        </button>
+                        <button onclick="downloadQR('pdf')" class="download-btn download-btn-secondary" id="download-pdf-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg> PDF Olarak İndir
+                        </button>
+                    </div>
+
+                    <button onclick="resetToDefault()" class="reset-btn">Ayarları Sıfırla</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (Matched to romsoft.com.tr) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-left">
+                    <div class="footer-logo">romsoft</div>
+                    <div class="footer-slogan" data-i18n="footer.slogan">Teknolojiyi sanatla buluşturuyoruz.</div>
+                    <div class="footer-cta" data-i18n="footer.cta">Sorularınız için bize ulaşın.</div>
+                </div>
+                <div class="footer-right">
+                    <a href="https://www.instagram.com/romsoftofficial/" target="_blank" class="social-btn" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="mailto:destek@romsoft.com.tr" class="social-btn" aria-label="Email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </a>
+                    <a href="https://x.com/romsoftofficial" target="_blank" class="social-btn" aria-label="X (Twitter)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-copyright" data-i18n="footer.rights">© 2025 Romsoft. Tüm hakları saklıdır.</div>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic & Background Particles -->
+    <script type="text/javascript">
+        // Global variables for QR state
+        let qrCode = null;
+        let logoDataUrl = "";
+        let qrSize = 500;
+
+        // Initialize QR code styling
+        document.addEventListener("DOMContentLoaded", function () {
+            qrCode = new QRCodeStyling({
+                width: 300,
+                height: 300,
+                type: "svg",
+                data: "https://romsoft.com.tr",
+                dotsOptions: {
+                    type: "rounded",
+                    color: null,
+                    gradient: {
+                        type: "linear",
+                        rotation: (Math.PI * 45) / 180,
+                        colorStops: [
+                            { offset: 0, color: "#6c5ce7" },
+                            { offset: 1, color: "#74b9ff" }
+                        ]
+                    }
+                },
+                backgroundOptions: {
+                    color: "#ffffff",
+                },
+                imageOptions: {
+                    crossOrigin: "anonymous",
+                    hideBackgroundDots: true,
+                    imageSize: 0.3,
+                    margin: 0
+                }
+            });
+
+            // Append inside preview container
+            qrCode.append(document.getElementById("qr-canvas-container"));
+            
+            // Generate initial QR based on controls
+            updateQR();
+            initParticles();
+        });
+
+        // --- Particle Background Logic ---
+        function initParticles() {
+            const canvas = document.getElementById('bgCanvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let width, height;
+                let particles = [];
+
+                function resize() {
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
+                }
+
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * width;
+                        this.y = Math.random() * height;
+                        this.vx = (Math.random() - 0.5) * 0.4;
+                        this.vy = (Math.random() - 0.5) * 0.4;
+                        this.size = Math.random() * 2 + 0.5;
+                        this.color = `rgba(108, 92, 231, ${Math.random() * 0.35 + 0.05})`;
+                    }
+
+                    update() {
+                        this.x += this.vx;
+                        this.y += this.vy;
+
+                        if (this.x < 0) this.x = width;
+                        if (this.x > width) this.x = 0;
+                        if (this.y < 0) this.y = height;
+                        if (this.y > height) this.y = 0;
+                    }
+
+                    draw() {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fillStyle = this.color;
+                        ctx.fill();
+                    }
+                }
+
+                function makeParticles() {
+                    particles = [];
+                    const count = Math.min(Math.floor(width / 20), 80);
+                    for (let i = 0; i < count; i++) {
+                        particles.push(new Particle());
+                    }
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, width, height);
+                    particles.forEach(p => {
+                        p.update();
+                        p.draw();
+                    });
+                    requestAnimationFrame(animate);
+                }
+
+                window.addEventListener('resize', () => {
+                    resize();
+                    makeParticles();
+                });
+
+                resize();
+                makeParticles();
+                animate();
+            }
+        }
+
+        // --- QR Customizer Handlers ---
+
+        // Update range display helper
+        function updateRangeValue(inputId, valId, suffix = '') {
+            const input = document.getElementById(inputId);
+            const valueDisplay = document.getElementById(valId);
+            valueDisplay.textContent = input.value + suffix;
+        }
+
+        // Color input synchronization helpers
+        function syncColorInput(pickerId, textId) {
+            const picker = document.getElementById(pickerId);
+            const text = document.getElementById(textId);
+            text.value = picker.value.toUpperCase();
+            updateQR();
+        }
+
+        function syncColorPicker(pickerId, textId) {
+            const picker = document.getElementById(pickerId);
+            const text = document.getElementById(textId);
+            let val = text.value.trim();
+            if (!val.startsWith('#')) {
+                val = '#' + val;
+            }
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                picker.value = val;
+                text.value = val.toUpperCase();
+                updateQR();
+            }
+        }
+
+        // Toggle visibility of gradient sub-options
+        function toggleGradient(prefix) {
+            const colorType = document.getElementById(`${prefix}-color-type`).value;
+            const singleGroup = document.getElementById(`${prefix}-single-color-group`);
+            const gradColorsGroup = document.getElementById(`${prefix}-gradient-colors-group`);
+            const gradOptsGroup = document.getElementById(`${prefix}-gradient-options-group`);
+
+            if (colorType === 'gradient') {
+                if (singleGroup) singleGroup.style.display = 'none';
+                if (gradColorsGroup) gradColorsGroup.style.display = 'flex';
+                if (gradOptsGroup) gradOptsGroup.style.display = 'flex';
+            } else {
+                if (singleGroup) singleGroup.style.display = 'block';
+                if (gradColorsGroup) gradColorsGroup.style.display = 'none';
+                if (gradOptsGroup) gradOptsGroup.style.display = 'none';
+            }
+            updateQR();
+        }
+
+        // Toggle custom toggle sections (corners square, corners dot)
+        function toggleCustomSection(prefix) {
+            const isChecked = document.getElementById(`custom-${prefix}-toggle`).checked;
+            const optionsPanel = document.getElementById(`${prefix}-options-panel`);
+            optionsPanel.style.display = isChecked ? 'flex' : 'none';
+        }
+
+        // Handle transparent background
+        function toggleTransparentBackground() {
+            const isTransparent = document.getElementById('bg-transparent-toggle').checked;
+            const bgContainer = document.getElementById('bg-color').parentElement;
+            if (isTransparent) {
+                bgContainer.style.opacity = '0.4';
+                bgContainer.style.pointerEvents = 'none';
+            } else {
+                bgContainer.style.opacity = '1';
+                bgContainer.style.pointerEvents = 'auto';
+            }
+            updateQR();
+        }
+
+        // Handle Logo Upload
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            const fileDisplay = document.getElementById('logo-file-display');
+            const fileNameSpan = document.getElementById('logo-file-name');
+
+            if (file) {
+                fileNameSpan.textContent = file.name;
+                fileDisplay.style.display = 'flex';
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoDataUrl = e.target.result;
+                    updateQR();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Remove Logo
+        function removeLogo() {
+            document.getElementById('logo-file-input').value = '';
+            const fileDisplay = document.getElementById('logo-file-display');
+            if (fileDisplay) fileDisplay.style.display = 'none';
+            logoDataUrl = "";
+            updateQR();
+        }
+
+        // Change target resolution of downloaded QR
+        function updateQRSize() {
+            qrSize = parseInt(document.getElementById('qr-size-select').value);
+        }
+
+        // Compile options & update QR Code dynamically
+        function updateQR() {
+            if (!qrCode) return;
+
+            const dataContent = document.getElementById('url-input').value || "https://romsoft.com.tr";
+
+            // 1. Dots Options
+            const dotType = document.getElementById('dot-type-select').value;
+            const dotColorType = document.getElementById('dot-color-type').value;
+            let dotOptions = { type: dotType };
+
+            if (dotColorType === 'single') {
+                dotOptions.color = document.getElementById('dot-color').value;
+                dotOptions.gradient = null;
+            } else {
+                const color1 = document.getElementById('dot-grad-color1').value;
+                const color2 = document.getElementById('dot-grad-color2').value;
+                const gradType = document.getElementById('dot-grad-type').value;
+                const gradAngle = parseInt(document.getElementById('dot-grad-angle').value);
+
+                dotOptions.color = null;
+                dotOptions.gradient = {
+                    type: gradType,
+                    rotation: (Math.PI * gradAngle) / 180,
+                    colorStops: [
+                        { offset: 0, color: color1 },
+                        { offset: 1, color: color2 }
+                    ]
+                };
+            }
+
+            // 2. Corners Square Options
+            let cornersSquareOptions = {};
+            const isCustomSquare = document.getElementById('custom-corners-square-toggle').checked;
+
+            if (isCustomSquare) {
+                const sqType = document.getElementById('corners-square-type-select').value;
+                const sqColorType = document.getElementById('corners-square-color-type').value;
+                cornersSquareOptions.type = sqType;
+
+                if (sqColorType === 'single') {
+                    cornersSquareOptions.color = document.getElementById('corners-square-color').value;
+                    cornersSquareOptions.gradient = null;
+                } else {
+                    const sqCol1 = document.getElementById('corners-square-grad-color1').value;
+                    const sqCol2 = document.getElementById('corners-square-grad-color2').value;
+                    const sqGradType = document.getElementById('corners-square-grad-type').value;
+                    const sqGradAngle = parseInt(document.getElementById('corners-square-grad-angle').value);
+
+                    cornersSquareOptions.color = null;
+                    cornersSquareOptions.gradient = {
+                        type: sqGradType,
+                        rotation: (Math.PI * sqGradAngle) / 180,
+                        colorStops: [
+                            { offset: 0, color: sqCol1 },
+                            { offset: 1, color: sqCol2 }
+                        ]
+                    };
+                }
+            } else {
+                // fallback to same as dots (or clean default)
+                cornersSquareOptions = {
+                    type: dotType === 'dots' || dotType === 'rounded' || dotType === 'classy-rounded' ? 'extra-rounded' : 'square',
+                    color: dotColorType === 'single' ? document.getElementById('dot-color').value : document.getElementById('dot-grad-color1').value,
+                    gradient: null
+                };
+            }
+
+            // 3. Corners Dot Options
+            let cornersDotOptions = {};
+            const isCustomDot = document.getElementById('custom-corners-dot-toggle').checked;
+
+            if (isCustomDot) {
+                const dotTypeSel = document.getElementById('corners-dot-type-select').value;
+                const dotColorTypeSel = document.getElementById('corners-dot-color-type').value;
+                cornersDotOptions.type = dotTypeSel;
+
+                if (dotColorTypeSel === 'single') {
+                    cornersDotOptions.color = document.getElementById('corners-dot-color').value;
+                    cornersDotOptions.gradient = null;
+                } else {
+                    const dotCol1 = document.getElementById('corners-dot-grad-color1').value;
+                    const dotCol2 = document.getElementById('corners-dot-grad-color2').value;
+                    const dotGradType = document.getElementById('corners-dot-grad-type').value;
+                    const dotGradAngle = parseInt(document.getElementById('corners-dot-grad-angle').value);
+
+                    cornersDotOptions.color = null;
+                    cornersDotOptions.gradient = {
+                        type: dotGradType,
+                        rotation: (Math.PI * dotGradAngle) / 180,
+                        colorStops: [
+                            { offset: 0, color: dotCol1 },
+                            { offset: 1, color: dotCol2 }
+                        ]
+                    };
+                }
+            } else {
+                cornersDotOptions = {
+                    type: dotType === 'dots' || dotType === 'rounded' || dotType === 'classy-rounded' ? 'dot' : 'square',
+                    color: dotColorType === 'single' ? document.getElementById('dot-color').value : document.getElementById('dot-grad-color1').value,
+                    gradient: null
+                };
+            }
+
+            // 4. Background Options
+            const isBgTransparent = document.getElementById('bg-transparent-toggle').checked;
+            const bgOptions = {
+                color: isBgTransparent ? 'transparent' : document.getElementById('bg-color').value
+            };
+
+            // 5. Image (Logo) Options
+            const logoSize = parseFloat(document.getElementById('logo-size').value);
+            const logoMargin = parseInt(document.getElementById('logo-margin').value);
+            const logoClearBg = document.getElementById('logo-clear-bg').checked;
+            
+            const imageOptions = {
+                hideBackgroundDots: logoClearBg,
+                imageSize: logoSize,
+                margin: logoMargin,
+                crossOrigin: "anonymous"
+            };
+
+            // Apply configuration updates
+            qrCode.update({
+                data: dataContent,
+                dotsOptions: dotOptions,
+                cornersSquareOptions: cornersSquareOptions,
+                cornersDotOptions: cornersDotOptions,
+                backgroundOptions: bgOptions,
+                image: logoDataUrl,
+                imageOptions: imageOptions
+            });
+        }
+
+        // Apply pre-designed templates
+        function applyPreset(name) {
+            // Remove active status from all preset buttons
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`preset-${name}`).classList.add('active');
+
+            // Reset toggles first
+            document.getElementById('custom-corners-square-toggle').checked = false;
+            document.getElementById('custom-corners-dot-toggle').checked = false;
+            document.getElementById('bg-transparent-toggle').checked = false;
+            toggleCustomSection('corners-square');
+            toggleCustomSection('corners-dot');
+            toggleTransparentBackground();
+
+            // Set inputs depending on preset name
+            if (name === 'nebula') {
+                // Dots gradient
+                document.getElementById('dot-type-select').value = 'rounded';
+                document.getElementById('dot-color-type').value = 'gradient';
+                document.getElementById('dot-grad-color1').value = '#6C5CE7';
+                document.getElementById('dot-grad-color1-text').value = '#6C5CE7';
+                document.getElementById('dot-grad-color2').value = '#74B9FF';
+                document.getElementById('dot-grad-color2-text').value = '#74B9FF';
+                document.getElementById('dot-grad-type').value = 'linear';
+                document.getElementById('dot-grad-angle').value = 45;
+                document.getElementById('dot-grad-angle-val').textContent = '45°';
+                
+                // Background
+                document.getElementById('bg-color').value = '#FFFFFF';
+                document.getElementById('bg-color-text').value = '#FFFFFF';
+            } 
+            else if (name === 'neon') {
+                // Dots gradient
+                document.getElementById('dot-type-select').value = 'classy';
+                document.getElementById('dot-color-type').value = 'gradient';
+                document.getElementById('dot-grad-color1').value = '#FF007F';
+                document.getElementById('dot-grad-color1-text').value = '#FF007F';
+                document.getElementById('dot-grad-color2').value = '#00F0FF';
+                document.getElementById('dot-grad-color2-text').value = '#00F0FF';
+                document.getElementById('dot-grad-type').value = 'linear';
+                document.getElementById('dot-grad-angle').value = 45;
+                document.getElementById('dot-grad-angle-val').textContent = '45°';
+
+                // Custom Corners Square
+                document.getElementById('custom-corners-square-toggle').checked = true;
+                toggleCustomSection('corners-square');
+                document.getElementById('corners-square-type-select').value = 'extra-rounded';
+                document.getElementById('corners-square-color-type').value = 'single';
+                document.getElementById('corners-square-color').value = '#00F0FF';
+                document.getElementById('corners-square-color-text').value = '#00F0FF';
+
+                // Custom Corners Dot
+                document.getElementById('custom-corners-dot-toggle').checked = true;
+                toggleCustomSection('corners-dot');
+                document.getElementById('corners-dot-type-select').value = 'dot';
+                document.getElementById('corners-dot-color-type').value = 'single';
+                document.getElementById('corners-dot-color').value = '#FF007F';
+                document.getElementById('corners-dot-color-text').value = '#FF007F';
+
+                // Background
+                document.getElementById('bg-color').value = '#05050A';
+                document.getElementById('bg-color-text').value = '#05050A';
+            } 
+            else if (name === 'gold') {
+                // Dots
+                document.getElementById('dot-type-select').value = 'classy-rounded';
+                document.getElementById('dot-color-type').value = 'single';
+                document.getElementById('dot-color').value = '#D4AF37';
+                document.getElementById('dot-color-text').value = '#D4AF37';
+
+                // Custom Corners Square
+                document.getElementById('custom-corners-square-toggle').checked = true;
+                toggleCustomSection('corners-square');
+                document.getElementById('corners-square-type-select').value = 'square';
+                document.getElementById('corners-square-color-type').value = 'single';
+                document.getElementById('corners-square-color').value = '#FBBF24';
+                document.getElementById('corners-square-color-text').value = '#FBBF24';
+
+                // Custom Corners Dot
+                document.getElementById('custom-corners-dot-toggle').checked = true;
+                toggleCustomSection('corners-dot');
+                document.getElementById('corners-dot-type-select').value = 'dot';
+                document.getElementById('corners-dot-color-type').value = 'single';
+                document.getElementById('corners-dot-color').value = '#FBBF24';
+                document.getElementById('corners-dot-color-text').value = '#FBBF24';
+
+                // Background
+                document.getElementById('bg-color').value = '#0A0A14';
+                document.getElementById('bg-color-text').value = '#0A0A14';
+            } 
+            else if (name === 'emerald') {
+                // Dots
+                document.getElementById('dot-type-select').value = 'dots';
+                document.getElementById('dot-color-type').value = 'single';
+                document.getElementById('dot-color').value = '#00CEC9';
+                document.getElementById('dot-color-text').value = '#00CEC9';
+
+                // Custom Corners Square
+                document.getElementById('custom-corners-square-toggle').checked = true;
+                toggleCustomSection('corners-square');
+                document.getElementById('corners-square-type-select').value = 'dot';
+                document.getElementById('corners-square-color-type').value = 'single';
+                document.getElementById('corners-square-color').value = '#81ECEC';
+                document.getElementById('corners-square-color-text').value = '#81ECEC';
+
+                // Custom Corners Dot
+                document.getElementById('custom-corners-dot-toggle').checked = true;
+                toggleCustomSection('corners-dot');
+                document.getElementById('corners-dot-type-select').value = 'dot';
+                document.getElementById('corners-dot-color-type').value = 'single';
+                document.getElementById('corners-dot-color').value = '#00CEC9';
+                document.getElementById('corners-dot-color-text').value = '#00CEC9';
+
+                // Background
+                document.getElementById('bg-color').value = '#FFFFFF';
+                document.getElementById('bg-color-text').value = '#FFFFFF';
+            } 
+            else if (name === 'dark') {
+                // Dots
+                document.getElementById('dot-type-select').value = 'square';
+                document.getElementById('dot-color-type').value = 'single';
+                document.getElementById('dot-color').value = '#FFFFFF';
+                document.getElementById('dot-color-text').value = '#FFFFFF';
+
+                // Background
+                document.getElementById('bg-color').value = '#000000';
+                document.getElementById('bg-color-text').value = '#000000';
+            }
+
+            // Sync option visibility blocks
+            toggleGradient('dot');
+            toggleGradient('corners-square');
+            toggleGradient('corners-dot');
+            
+            // Re-render
+            updateQR();
+        }
+
+        // Download QR Code with desired size & format
+        function downloadQR(format) {
+            if (!qrCode) return;
+
+            // Generate temporary qrCode for high resolution download
+            const downloadQrCode = new QRCodeStyling({
+                width: qrSize,
+                height: qrSize,
+                type: format === 'svg' ? 'svg' : 'canvas',
+                data: qrCode._options.data,
+                dotsOptions: qrCode._options.dotsOptions,
+                cornersSquareOptions: qrCode._options.cornersSquareOptions,
+                cornersDotOptions: qrCode._options.cornersDotOptions,
+                backgroundOptions: qrCode._options.backgroundOptions,
+                image: qrCode._options.image,
+                imageOptions: qrCode._options.imageOptions
+            });
+
+            const fileName = `qrcode-${Date.now()}`;
+            downloadQrCode.download({
+                name: fileName,
+                extension: format
+            });
+        }
+
+        // Reset to Default Setup
+        function resetToDefault() {
+            // URL Input back to romsoft website
+            document.getElementById('url-input').value = 'https://romsoft.com.tr';
+            document.getElementById('qr-size-select').value = '500';
+            qrSize = 500;
+            
+            // Remove uploaded logo file if any
+            removeLogo();
+
+            // Set preset back to nebula
+            applyPreset('nebula');
+        }
+    </script>
+</body>
+
+</html>
