@@ -32,6 +32,7 @@ python -m http.server 8000
 | --- | --- |
 | `index.html` | Sayfa ve arayüz |
 | `qr.js` | Kod üretimi, içerik türleri, dışa aktarma |
+| `style2.css` | Sayfanın stil dosyası |
 | `vendor/` | Üçüncü taraf kütüphaneler (CDN kullanılmaz), bkz. [THIRD-PARTY.md](THIRD-PARTY.md) |
 
 ## Lisans
