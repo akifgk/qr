@@ -529,7 +529,7 @@
         if (!jsPdfSozu) {
             jsPdfSozu = new Promise((tamam, hata) => {
                 const s = document.createElement('script');
-                s.src = 'vendor/jspdf.umd.min.js?v=2.5.1';
+                s.src = 'vendor/jspdf.umd.min.js?v=4.2.1';
                 s.onload = tamam;
                 s.onerror = () => { jsPdfSozu = null; hata(new Error('jsPDF')); };
                 document.head.appendChild(s);
