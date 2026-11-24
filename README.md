@@ -13,7 +13,7 @@ sayfanın içinde, bilgisayarında çalışır. Canlı hâli: <https://romsoft.c
 - **Çıktı:** PNG, SVG ve PDF; 300 ile 2000 piksel arası boyut; kare, 4:3, 3:4, 16:9, 9:16 oranları;
   kodun altına ya da üstüne yazı.
 - **Türkçe ve İngilizce** arayüz.
-- **Gizlilik:** girdiğin içerik (Wi-Fi şifresi dahil) ve logon hiçbir yere gönderilmez ve saklanmaz.
+- **Gizlilik (`index.html`):** girdiğin içerik (Wi-Fi şifresi dahil) ve logon hiçbir yere gönderilmez ve saklanmaz.
   Tarayıcıda yalnızca tasarım ayarların hatırlanır.
 
 > Üretilen kodu telefonunla bir kez okutup kontrol et. Tarayıcı içi doğrulama gerçek bir telefonun
@@ -32,7 +32,7 @@ python -m http.server 8000
 | --- | --- |
 | `index.html` | Sayfa ve arayüz |
 | `qr.js` | Kod üretimi, içerik türleri, dışa aktarma |
-| `qr.html`, `style2.css` | Eski sayfa ve stil dosyası |
+| `qr.html`, `style2.css` | Eski, basit sürüm. Kodu `api.qrserver.com` üzerinden ürettiği için içeriği o servise gönderir; yukarıdaki gizlilik notu bu sayfa için geçerli değildir |
 | `vendor/` | Üçüncü taraf kütüphaneler (CDN kullanılmaz), bkz. [THIRD-PARTY.md](THIRD-PARTY.md) |
 
 ## Lisans
